@@ -1,9 +1,11 @@
 package blackjack;
+
 import java.util.Scanner;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 import java.awt.Font;
 import java.awt.RenderingHints;
+import java.util.HashMap;
 
 public class Game {
     static final int WIDTH = 112;
@@ -12,16 +14,8 @@ public class Game {
     private static Scanner scanner = new Scanner(System .in);
 
     public static void main(String[] args) throws Exception {
-        do {
-            System.out.println(CLEAR_CONSOLE);
-            displayLogo();
-            System.out.print("Please, write your username: ");
-            Settings.setUsername(scanner.nextLine());
-        } while (!Settings.setUsername(Settings.getUsername()));
-
-        System.out.println(CLEAR_CONSOLE);
+        setUsername();
         displayMainMenu();
-
     }
 
     static void displayLogo() {
@@ -47,9 +41,78 @@ public class Game {
         }
     }
 
+    static void setUsername() {
+        do {
+            System.out.println(CLEAR_CONSOLE);
+            displayLogo();
+            System.out.print("Please, write your username: ");
+        } while (!Settings.setUsername(scanner.nextLine()));
+    }
+
     static void displayMainMenu() {
-        displayLogo();
-        System.out.printf("Hello, %s!", Settings.getUsername());
-        
+        do {
+            System.out.println(CLEAR_CONSOLE);
+            displayLogo();
+            System.out.printf("Hello, %s!\n", Settings.getUsername());
+            for (int i = 1; i <= MainMenuActions.LENGTH; i++) {
+                System.out.printf("%d. %s\n", i, MainMenuActions.valueOf(i).toString());
+            }
+            displayUserChoice();
+        } while (!checkUserChoice(scanner.nextLine(), MainMenuActions.LENGTH));
+    }
+
+    static void displayUserChoice() {
+        System.out.print("Choose an action by its number: ");
+    }
+
+    static boolean checkUserChoice(String userChoice, int maxValue) {
+        try {
+            int choice = Integer.parseInt(userChoice);
+            if (choice >= 1 && choice <= maxValue) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        catch (NumberFormatException e) {
+            return false;
+        }
+    }
+}
+
+enum MainMenuActions {
+    START(1, "Start"),
+    SETTINGS(2, "Settings"),
+    EXIT(3, "Exit");
+
+    public final static int LENGTH = MainMenuActions.values().length;
+    private int index;
+    private String str;
+
+    private MainMenuActions(int index, String str) {
+        this.str = str;
+        this.index = index;
+    }
+
+    public int toInt() {
+        return index;
+    }
+
+    @Override
+    public String toString() {
+        return str;
+    }
+
+    private static HashMap<Integer, MainMenuActions> actionsMap = new HashMap<Integer, MainMenuActions>();
+
+    static {
+        for (MainMenuActions action : MainMenuActions.values()) {
+            actionsMap.put(action.index, action);
+        }
+    }
+
+    public static MainMenuActions valueOf(int index) {
+        return actionsMap.get(index);
     }
 }
