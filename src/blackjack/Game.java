@@ -135,7 +135,7 @@ public class Game {
                 System.out.printf("%s\n", Card.getCardsAsString(Player.getCards(Player.SECOND_HAND)));
                 System.out.printf("Score: %d\n", Card.getCardsTotal(Player.getCards(Player.SECOND_HAND)));
             }
-        } while (!checkUserChoice(scanner.nextLine(), 2));
+        } while (!checkUserChoice(scanner.nextLine(), PlayerActions.LENGTH));
     }
 
     static void displayUserChoice() {
@@ -225,6 +225,44 @@ enum SettingsMenuActions {
     }
 
     public static SettingsMenuActions valueOf(int index) {
+        return actionsMap.get(index);
+    }
+}
+
+enum PlayerActions {
+    HIT(1, "Hit"),
+    STAY(2, "Stay"),
+    DOUBLE_DOWN(3, "Double Down"),
+    SPLIT(4, "Split"),
+    SURRENDER(5, "Surrender");
+
+    public final static int LENGTH = PlayerActions.values().length;
+    private int index;
+    private String str;
+
+    private PlayerActions(int index, String str) {
+        this.str = str;
+        this.index = index;
+    }
+
+    public int toInt() {
+        return index;
+    }
+
+    @Override
+    public String toString() {
+        return str;
+    }
+
+    private static HashMap<Integer, PlayerActions> actionsMap = new HashMap<Integer, PlayerActions>();
+
+    static {
+        for (PlayerActions action : PlayerActions.values()) {
+            actionsMap.put(action.index, action);
+        }
+    }
+
+    public static PlayerActions valueOf(int index) {
         return actionsMap.get(index);
     }
 }
