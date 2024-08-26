@@ -1,18 +1,18 @@
 package blackjack;
 
 public final class Settings {
-    private static String username;
+    private static String userName;
 
-    public static boolean setUsername(String username) {
-        if (username == null || username.isEmpty() || username.isBlank()) {
+    public static boolean setUserName(String userName) {
+        if (userName == null || userName.isEmpty() || userName.isBlank()) {
             return false;
         }
-        Settings.username = username;
+        Settings.userName = userName;
         return true;
     }
 
-    public static String getUsername() {
-        return username;
+    public static String getUserName() {
+        return userName;
     }
 
     private Settings() {
