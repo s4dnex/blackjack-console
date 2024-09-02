@@ -20,13 +20,13 @@ public final class Deck {
         }
     }
 
-    public static void resetDeck() {
+    public static void reset() {
         while (usedCards.size() > 0) {
             deck.add(usedCards.removeLast());
         }
     }
 
-    public static void shuffleDeck() {
+    public static void shuffle() {
         for (int i = 0; i < 100; i++) {
             deck.add(random.nextInt(SIZE), deck.remove(random.nextInt(SIZE)));
         }
@@ -48,52 +48,6 @@ class Card {
     private String name;
     private int value;
 
-
-    public static int getCardsTotal(ArrayList<Card> cards) {
-        int total = 0;
-        int aceCount = 0;
-
-        for (Card card : cards) {
-            total += card.value;
-
-            if (card.name.equals("A")) {
-                aceCount++;
-            }
-        }
-
-        while (total > 21 && aceCount > 0) {
-            total -= 10;
-            aceCount--;
-        }
-
-        return total;
-    }
-
-    @Override
-    public String toString() {
-        return name + suit;
-    }
-
-    public static String getCardsAsString(ArrayList<Card> cards) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Card card : cards) {
-            stringBuilder.append(card.toString() + " ");
-        }
-        return stringBuilder.toString();
-    }
-
-
-    public Card(Suits suit, String name) {
-        this.suit = suit;
-        this.name = name;
-        value = cardValues.get(name);
-    }
-
-
-    public static Set<String> getCardNamesAsSet() {
-        return cardValues.keySet();
-    }
-
     private static HashMap<String, Integer> cardValues = new HashMap<String, Integer>();
 
     static {
@@ -112,6 +66,64 @@ class Card {
         cardValues.put("A", 11);
     }
 
+    public Card(Suits suit, String name) {
+        this.suit = suit;
+        this.name = name;
+        value = cardValues.get(name);
+    }
+
+    @Override
+    public String toString() {
+        return name + suit;
+    }
+
+    public static String getCardsAsString(ArrayList<Card> cards, boolean onlyFirstCard) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (onlyFirstCard) {
+            stringBuilder.append(cards.getFirst().toString() + " " + "??");
+        }
+        else {
+            for (Card card : cards) {
+                stringBuilder.append(card.toString() + " ");
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+
+    public static Set<String> getCardNamesAsSet() {
+        return cardValues.keySet();
+    }
+
+    public static int getCardsTotal(ArrayList<Card> cards, boolean onlyFirstCard) {
+        int total = 0;
+        int aceCount = 0;
+
+        if (onlyFirstCard) {
+            total += cards.getFirst().value;
+        }
+        else {
+            for (Card card : cards) {
+                total += card.value;
+
+                if (card.name.equals("A")) {
+                    aceCount++;
+                }
+            }
+        }
+
+        while (total > 21 && aceCount > 0) {
+            total -= 10;
+            aceCount--;
+        }
+
+        return total;
+    }
+
+    public boolean equalsByName(Card card) {
+        return this.name.equals(card.name);
+    }
 }
 
 enum Suits {
