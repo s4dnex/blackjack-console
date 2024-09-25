@@ -1,1 +1,4 @@
 ## Blackjack
+
+### Requirements
+JDK21
